@@ -1,3 +1,13 @@
+Technology stack:
+Apache kafka: Version kafka_2.13-3.6.1
+Python: Version 3.11.8
+Spark: spark-connector @ org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.4
+MongoDB: Cloud NoSQL Storage
+Tableau: Desktop with MongoDB Atlas Connector + latest taco file
+
+
+
+
 This is a personal project where I stream data from reddit API's on a particular subreddit (Example 'Bikes') and pull comments through a python script called Producer.py. 
 I then set up a local apache kafka cluster on my machine where I send the post submission's title as a key, the comments themselves as values to a topic called mytopic to store the streaming
 comments in a Kafka Producer.
