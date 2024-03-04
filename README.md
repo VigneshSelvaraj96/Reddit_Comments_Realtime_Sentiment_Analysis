@@ -1,0 +1,13 @@
+This is a personal project where I stream data from reddit API's on a particular subreddit (Example 'Bikes') and pull comments through a python script called Producer.py. 
+I then set up a local apache kafka cluster on my machine where I send the post submission's title as a key, the comments themselves as values to a topic called mytopic to store the streaming
+comments in a Kafka Producer.
+
+Analysis.py uses a local spark cluster and spark session to process the records stored in the producer cluster in apache kafka (acts like a kafka consumer) to
+        1. Clean the text data in the Kafka Cluster
+        2. Parse the data into a defined schema 
+        3. Do sentiment analysis on the comments
+        4. Attach a new column for the polarity and sentiment classification to the schema
+        5. Store the dataframe stream to a mongodb cluster that triggers on each batch. 
+
+To do some data visualization, I use tableau + MongoDB BI connector for tableau to stream the NoSQL data as records and aggregate the count of the different polarities 
+grouped by submission names to show the overall subreddit's polarity.
