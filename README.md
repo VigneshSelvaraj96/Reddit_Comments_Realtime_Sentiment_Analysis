@@ -1,9 +1,9 @@
 Technology stack:
-Apache kafka: Version kafka_2.13-3.6.1
-Python: Version 3.11.8
-Spark: spark-connector @ org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.4
-MongoDB: Cloud NoSQL Storage
-Tableau: Desktop with MongoDB Atlas Connector + latest taco file
+* Apache kafka: Version kafka_2.13-3.6.1
+* Python: Version 3.11.8
+* Spark: spark-connector @ org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.4
+* MongoDB: Cloud NoSQL Storage
+* Tableau: Desktop with MongoDB Atlas Connector + latest taco file
 
 
 
@@ -13,11 +13,11 @@ I then set up a local apache kafka cluster on my machine where I send the post s
 comments in a Kafka Producer.
 
 Analysis.py uses a local spark cluster and spark session to process the records stored in the producer cluster in apache kafka (acts like a kafka consumer) to
-        1. Clean the text data in the Kafka Cluster
-        2. Parse the data into a defined schema 
-        3. Do sentiment analysis on the comments
-        4. Attach a new column for the polarity and sentiment classification to the schema
-        5. Store the dataframe stream to a mongodb cluster that triggers on each batch. 
+1. Clean the text data in the Kafka Cluster
+2. Parse the data into a defined schema 
+3. Do sentiment analysis on the comments
+4. Attach a new column for the polarity and sentiment classification to the schema
+5. Store the dataframe stream to a mongodb cluster that triggers on each batch. 
 
 To do some data visualization, I use tableau + MongoDB BI connector for tableau to stream the NoSQL data as records and aggregate the count of the different polarities 
 grouped by submission names to show the overall subreddit's polarity.
