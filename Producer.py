@@ -19,12 +19,12 @@ if __name__ == "__main__":
     topic_kafka = 'mytopic'
 
     #loop through 10 submissions from the cars subreddit and send the comments to the Kafka API
-    subreddit = reddit.subreddit("cars")
+    subreddit = reddit.subreddit("bikes")
     for submission in subreddit.hot(limit=10):
         submission.comments.replace_more(limit=None)
         for comment in submission.comments.list():
             #periodically print comments to the console and send them to the Kafka API
-            time.sleep(5)
+            #time.sleep(5)
             #print(comment.body)
             #print('-------------------\n')
-            producer.send(topic_kafka,key = subreddit.name.encode('utf-8'), value=comment.body.encode('utf-8'))
+            producer.send(topic_kafka,key = submission.title.encode('utf-8'), value=comment.body.encode('utf-8'))

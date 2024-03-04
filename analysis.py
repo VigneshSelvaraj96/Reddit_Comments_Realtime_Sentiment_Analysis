@@ -8,7 +8,7 @@ from pymongo.server_api import ServerApi
 import re
 
 
-mongoURL = "mongodb+srv://vxs377:1234@cluster0.5hulbld.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+mongoURL = "mongodb+srv://vxs377:1234@vig.h1kud88.mongodb.net/?retryWrites=true&w=majority&appName=Vig"
 #connect to mongoDB
 # Create a new client and connect to the server
 client = MongoClient(mongoURL, server_api=ServerApi('1'))
@@ -25,10 +25,6 @@ def cleancomment_func(comment: str) -> str:
     comment = re.sub(r'http\S+', '', str(comment))
     comment = re.sub(r'bit.ly/\S+', '', str(comment))
     comment = comment.strip('[link]')
-
-    # remove users
-    comment = re.sub('(RT\s@[A-Za-z]+[A-Za-z0-9-_]+)', '', str(comment))
-    comment = re.sub('(@[A-Za-z]+[A-Za-z0-9-_]+)', '', str(comment))
 
     # remove puntuation
     my_punctuation = '!"$%&\'()*+,-./:;<=>?[\\]^_`{|}~•@â'
@@ -62,7 +58,7 @@ def write_to_mongo(df, epoch_id):
     #interate through the pandas dataframe and store each row in the mongoDB cluster
     for index, row in df.iterrows():
         data = {
-            "subreddit_name": row['subreddit_name'],
+            "submission_name": row['submission_name'],
             "comment_preprocessing": row['comment_preprocessing'],
             "comment_postprocessing": row['comment_postprocessing'],
             "polarity": row['polarity'],
@@ -77,7 +73,6 @@ if __name__ == '__main__':
     # Create a SparkSession
     spark = SparkSession.builder\
             .appName("RedditSentimentAnalysis")\
-            .config("spark.jars.packages", "org.mongodb.spark:mongo-spark-connector_2.12:10.2.1")\
             .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.4")\
             .getOrCreate()
 
@@ -93,11 +88,13 @@ if __name__ == '__main__':
     #df.printSchema()
     #print("Schema printed")
     #typecast the key column to string
-    df_kafka = df_kafka.withColumn("subreddit_name", col("key").cast("string"))
+    df_kafka = df_kafka.withColumn("key", col("key").cast("string"))
     #typecast the value column to string
     df_kafka = df_kafka.withColumn("value", col("value").cast("string"))
     #rename the value column to comment_preprocessing
     df_kafka = df_kafka.withColumnRenamed("value", "comment_preprocessing")
+    #rename the key column to subreddit_name
+    df_kafka = df_kafka.withColumnRenamed("key", "submission_name")
     #create udf for cleaning the comment
     #apply the udf to the comment_preprocessing column and store in a new colunm 'comment_postprocessing'
     df_kafka = df_kafka.withColumn("comment_postprocessing", F.udf(cleancomment_func, StringType())(col("comment_preprocessing")))
@@ -106,6 +103,7 @@ if __name__ == '__main__':
     #store the sentiment of the cleaned comment in a new column 'sentiment'
     df_kafka = df_kafka.withColumn("sentiment", F.udf(getSentiment, StringType())(col("polarity")))
     #send the new, processed row to the mongoDB cluster for storage
-    df_kafka.writeStream.foreachBatch(write_to_mongo).start().awaitTermination()
+    df_kafka.writeStream.foreachBatch(write_to_mongo).start().awaitTermination(100)
+    #df_kafka.printSchema()
 
     
