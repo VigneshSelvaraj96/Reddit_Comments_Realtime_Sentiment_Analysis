@@ -27,3 +27,8 @@ Analysis.py uses a local spark cluster and spark session to process the records 
 
 To do some data visualization, I use tableau + MongoDB BI connector for tableau to stream the NoSQL data as records and aggregate the count of the different polarities 
 grouped by submission names to show the overall subreddit's polarity.
+
+This is an example dashboard that shows the sentiment analysis on 59 comments from the subreddit ('bike'). The top 10 posts were analyzed and comments on these posts were processed.
+
+![image](https://github.com/VigneshSelvaraj96/Reddit_Comments_Realtime_Sentiment_Analysis/assets/46285541/4563a2f7-a494-4e33-81df-8edd1147a10e)
+
