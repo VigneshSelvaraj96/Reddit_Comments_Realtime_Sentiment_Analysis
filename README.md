@@ -12,6 +12,12 @@ This is a personal project where I stream data from reddit API's on a particular
 I then set up a local apache kafka cluster on my machine where I send the post submission's title as a key, the comments themselves as values to a topic called mytopic to store the streaming
 comments in a Kafka Producer.
 
+Just a little bit of a primer on kafka, 
+* Kafka is a distributed event streaming platform that lets you read, write, store, and process events (also called records or messages in the documentation) across many machines.
+
+* Example events are payment transactions, geolocation updates from mobile phones, shipping orders, sensor measurements from IoT devices or medical equipment, and much more. These events are   
+  organized and stored in topics. Very simplified, a topic is similar to a folder in a filesystem, and the events are the files in that folder.
+
 Analysis.py uses a local spark cluster and spark session to process the records stored in the producer cluster in apache kafka (acts like a kafka consumer) to
 1. Clean the text data in the Kafka Cluster
 2. Parse the data into a defined schema 
